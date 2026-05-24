@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: eligibility
-          image: us-central1-docker.pkg.dev/mongodb-gke-project/healthcare-apis/eligibility:v999-fake
+          image: us-central1-docker.pkg.dev/mongodb-gke-project/healthcare-apis/eligibility:latest
           ports:
             - containerPort: 8080
           env:

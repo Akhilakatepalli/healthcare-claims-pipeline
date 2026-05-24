@@ -47,13 +47,21 @@ jobs:
             -f apis/reconciliation/Dockerfile apis/
           docker push $REGISTRY/$PROJECT_ID/$REPOSITORY/reconciliation:$GITHUB_SHA
 
+      - name: Install GKE auth plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet
+
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials healthcare-cluster \
             --region ${{ env.REGION }} \
             --project ${{ env.PROJECT_ID }}
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
 
       - name: Deploy to GKE
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
         run: |
           kubectl set image deployment/eligibility-deployment \
             eligibility=$REGISTRY/$PROJECT_ID/$REPOSITORY/eligibility:$GITHUB_SHA

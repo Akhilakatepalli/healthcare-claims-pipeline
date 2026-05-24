@@ -63,12 +63,12 @@ jobs:
         env:
           USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
         run: |
-          kubectl set image deployment/eligibility-deployment \
-            eligibility=$REGISTRY/$PROJECT_ID/$REPOSITORY/eligibility:$GITHUB_SHA
-          kubectl set image deployment/claims-deployment \
-            claims=$REGISTRY/$PROJECT_ID/$REPOSITORY/claims:$GITHUB_SHA
-          kubectl set image deployment/reconciliation-deployment \
-            reconciliation=$REGISTRY/$PROJECT_ID/$REPOSITORY/reconciliation:$GITHUB_SHA
+          sed -i "s|:latest|:$GITHUB_SHA|g" apis/k8s/eligibility.yaml
+          sed -i "s|:latest|:$GITHUB_SHA|g" apis/k8s/claims.yaml
+          sed -i "s|:latest|:$GITHUB_SHA|g" apis/k8s/reconciliation.yaml
+          kubectl apply -f apis/k8s/eligibility.yaml
+          kubectl apply -f apis/k8s/claims.yaml
+          kubectl apply -f apis/k8s/reconciliation.yaml
           kubectl rollout status deployment/eligibility-deployment
           kubectl rollout status deployment/claims-deployment
           kubectl rollout status deployment/reconciliation-deployment
